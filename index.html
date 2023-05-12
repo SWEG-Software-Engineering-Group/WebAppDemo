@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Webpage demo</title>
+    <style>
+		/* CSS styling for the header and navigation bar */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+		header {
+			background-color: #333;
+			color: #fff;
+			padding: 15px;
+			text-align: center;
+		}
+
+		nav {
+			background-color: #4CAF50;
+		}
+
+		nav a {
+			float: left;
+			color: #fff;
+			text-align: center;
+			padding: 14px 16px;
+			text-decoration: none;
+			font-size: 17px;
+		}
+
+		nav a:hover {
+			background-color: #ddd;
+			color: black;
+		}
+
+		/* CSS styling for the main section and footer */
+		main {
+			padding: 50px;
+			text-align: center;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            justify-content: space-evenly;
+            align-items: center;
+		}
+        
+		footer {
+            margin-top: auto;
+            background-color: #333;
+			color: #fff;
+			padding: 15px;
+			text-align: center;
+		}
+
+        body{
+            box-shadow: 0px 0px 4rem .5rem #888888;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            height: 100vh;
+            max-width: 1024px;
+            margin-inline: auto;
+        }
+	</style>
+    <script defer type="module" src="myscripts.js"></script> 
+</head>
+
+<body>
+	<header>
+		<h1 id="category:b7f94398-0add-4791-a960-8d39197fc6cd&title:TitoloGrande">Benvenuto</h1>
+        <h2 id="category:b7f94398-0add-4791-a960-8d39197fc6cd&title:TitoloPiccolo">Dai un'occhiata</h2>
+	</header>
+	<nav>
+		<a href="#" id="category:6f58ae79-36a5-4cff-91b3-34fb1a5f949f&title:HomeLink">Home</a>
+		<a href="#" id="category:6f58ae79-36a5-4cff-91b3-34fb1a5f949f&title:ChiSiamoLink">Chi siamo</a>
+		<a href="#" id="category:6f58ae79-36a5-4cff-91b3-34fb1a5f949f&title:ContattaciLink">Contattaci</a>
+	</nav>
+	<main>
+        <label id="category:9a4ccccb-7eec-46ce-ae58-f29b666896bc&title:Picker" for="language-picker">Select a language:</label>
+        <select id="language-picker">
+            <option value="Italian">Italian</option>
+            <option value="English">English</option>
+        </select>
+
+		<h3 id="category:9a4ccccb-7eec-46ce-ae58-f29b666896bc&title:Titolo">Questo è un titolo</h3>
+		<p id="category:9a4ccccb-7eec-46ce-ae58-f29b666896bc&title:PrimoParagrafo">Questo è il primo paragrafo...</p>
+		<p id="category:9a4ccccb-7eec-46ce-ae58-f29b666896bc&title:SecondoParagrafo">...e questo è il secondo paragrafo</p>
+        <button id="category:9a4ccccb-7eec-46ce-ae58-f29b666896bc&title:BottoneConferma">Conferma (non fa niente)</button>
+	</main>
+	<footer>
+		<p>Copyright &copy; 2023 SWEG - Software Engineering Group</p>
+	</footer>
+</body>
+
+</html>
