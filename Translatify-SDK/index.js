@@ -37,39 +37,40 @@ function storeTextHolders(){
     return findElementsWithIdPattern();
 }
 
-const Translatify = {
-    tenantId : '02d34632-83db-4ab6-b00a-56d3f224bb62',
-    apiKey : 'eyJraWQiOiIwcHhwOUNDeXYyXC9cL1Z1XC9Rb2V2dStSWGRReVIzSWgremQxb24zREIzbW9VPSIsImFsZyI6IlJTMjU2In0.eyJzdWIiOiI0NTMxMzFmMC1jMDYxLTQ0OWItOTM4OC1iYWUzOWNmYmJhMTgiLCJjb2duaXRvOmdyb3VwcyI6WyJhZG1pbiJdLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwiaXNzIjoiaHR0cHM6XC9cL2NvZ25pdG8taWRwLmV1LXdlc3QtMi5hbWF6b25hd3MuY29tXC9ldS13ZXN0LTJfdGxlQVhvcWJiIiwiY29nbml0bzp1c2VybmFtZSI6IjQ1MzEzMWYwLWMwNjEtNDQ5Yi05Mzg4LWJhZTM5Y2ZiYmExOCIsImN1c3RvbTpzdXJuYW1lIjoiTUlMQU4iLCJvcmlnaW5fanRpIjoiNzMxMjk2ZDgtNjk1Mi00MDk0LTg0ZTEtZTRmNjc3MTcxNzQ0IiwiYXVkIjoiNGFmdHZvbzI0ajVzdWRzazBtanFjcWNwZWgiLCJldmVudF9pZCI6ImQwZjhjMjdhLWI4ZDAtNDQ0OC05MGM4LTgwOTg2ZmI3MmE3OSIsInRva2VuX3VzZSI6ImlkIiwiYXV0aF90aW1lIjoxNjgzOTE5MzY3LCJuYW1lIjoiREFWSURFIiwiZXhwIjoxNjg0MDA1NzY3LCJpYXQiOjE2ODM5MTkzNjcsImp0aSI6IjhlMjU4ZDg0LTgwY2YtNGMxYi1hMDk5LTJhNzM0NDUyMDdhNCIsImVtYWlsIjoiZGF2aWRlLm1pbGFuLjJAc3R1ZGVudGkudW5pcGQuaXQifQ.H1n4npFqTw-8FCIKePULNXKWMlcRlCXlBuMXtmGLiL6BRCg6FfvaZmbu24GQ2q3nOo1ztppwUfpGFPa3ZCwSBnc2dLr0am_lxiYBMjWcMgG4tny1D2PnoR3l9g8HKVQqtUfdhFrc0aEZER88xnaoD9E2cSKS39YqOBagxt_WK7sTvxCFlA9YRfGOwTqGeqn-OWEWTrSJQRsRTK8HLpbJcv0tHZIVpOXVaWy25P4jOO7A0qfHZvhRUa12yMLMClBwZGI14lquig4TcwuTWJi1VJ3ohFP2Khqql6dBqpaE6wdZxBtUUwx6W-0jYE3Gs-uBzkVyei4RAKS3R7Wl5oj-CQ',
-    language : '',
-    languages : [],
-    textHolders : [],
-    // cachedLanguagesTexts: [],    //for caching texts instead of making repetetive API calls
-    setUpApiKey(apiKey){
-        this.apiKey = apiKey;
-    },
-    setUpTenantId(tenantId){
+class Translatify{
+    constructor(tenantId, apiKey){
         this.tenantId = tenantId;
-    },
-    retrieveLanguages(){
+        this.apiKey = apiKey;
+    }
+
+    //get languages from API and sets object's languages array
+    async retrieveLanguages(){
         if(this.apiKey !== null && this.tenantId !== null){
-            this.languages = fetch(`${REACT_APP_API_KEY}/tenant/${this.tenantId}/languages`, 
+            this.languages = await fetch(`${REACT_APP_API_KEY}/tenant/${this.tenantId}/languages`, 
             { 
                 headers: {
                     'Content-Type': 'application/json',
                     Accept: 'application/json',
-                    Authorization : `Bearer ${this.apiKey}`
+                    Authorization : `Bearer ${this.apiKey}`,
+                    // 'x-api-key': this.apiKey, 
             }})
             .then(res => res.json())
-            .then(res => res.Languages.languages)
+            .then(res => res.languages)
             .catch(err => {console.log('something went wrong while fetching data')});
-            console.log(languages);
         }
         else
             console.log('setup apiKey and tenantId using setUpApiKey and setUpTenantId functions');
-    },
+    };
+
+    //get specified text
+    //will return the text with the specified title in the current object Language: if a text is not found in the current language, the default language text will be displayed instead.
+    //if no text is selected a non-blocking error will be thrown
     getText(categoryName, title){
+        if(!this.language || this.language === ''){
+            throw 'no language selected';
+        }
         if(this.apiKey !== null && this.tenantId !== null)
-            return fetch(`${REACT_APP_API_KEY}/text/${this.tenantId}/${this.language}/${categoryName}/${title}/text`, 
+            return fetch(`${REACT_APP_API_KEY}/text/${this.tenantId}/${this.language}/${categoryName}/${title}`, 
             { 
                 headers: {
                     'Content-Type': 'application/json',
@@ -77,24 +78,32 @@ const Translatify = {
                     Authorization : `Bearer ${this.apiKey}`
             }})
             .then(res => res.json())
-            .then(res => {return res.Text.text})
-            .catch(err => {throw 'something went wrong while fetching data'});
+            .then(res => {
+                if(res.Text) return res.Text.text; 
+                else return '';
+            })
+            .catch(err => {throw err});
         else
             console.log('setup apiKey and tenantId using setUpApiKey and setUpTenantId functions');
-    },
+    };
+
+    //sets object language and fires getText calls for every text in the new language that matches the category-title combination from all the components in the page
     handleLanguageChange(newLanguage){
         this.language = newLanguage;
-        if(!this.textHolders || this.textHolders.length === 0)
-            this.textHolders = storeTextHolders();
-        this.textHolders.forEach((item) => {
-            this.getText(item.category, item.title).then((text) =>{
-                addTextToMatchingElement(item.element, text);
-            })
-            .catch(err =>{
-                console.log(err);
-            })
-        });
-    },
+        if(this.apiKey !== null && this.tenantId !== null){
+            if(!this.textHolders || this.textHolders.length === 0)
+                this.textHolders = storeTextHolders();
+            this.textHolders.forEach((item) => {
+                this.getText(item.category, item.title)
+                .then((text) =>{
+                    addTextToMatchingElement(item.element, text);
+                })
+                .catch(err =>{
+                    console.log(err);
+                })
+            });
+        }
+    };
 }
 
 export default Translatify;
