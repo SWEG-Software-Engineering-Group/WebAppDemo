@@ -1,5 +1,6 @@
 const REACT_APP_API_KEY = 'https://iibte10n05.execute-api.eu-west-2.amazonaws.com/dev';
 
+//returns an array of elements that contain an id in the form of "category:XXX&title:XXX"
 function findElementsWithIdPattern() {
     // Define the regular expression pattern to match
     const idPattern = /category:(.*?)&title:(.*)/;
@@ -26,11 +27,9 @@ function findElementsWithIdPattern() {
     return matchingElements;
 }
 
-function addTextToMatchingElement(element, text) {
 // Add some text to each matching element
+function addTextToMatchingElement(element, text) {
     element.textContent = text;
-
-    //could add caching for already loaded texts
 }
 
 function storeTextHolders(){
