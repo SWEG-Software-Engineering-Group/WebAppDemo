@@ -46,21 +46,17 @@ export default class Translatify{
 
     //get languages from API and sets object's languages array
     async retrieveLanguages(){
-        if(this.apiKey !== null && this.tenantId !== null){
-            this.languages = await fetch(`${REACT_APP_API_KEY}/tenant/${this.tenantId}/languages`, 
-            { 
-                headers: {
-                    'Content-Type': 'application/json',
-                    Accept: 'application/json',
-                    Authorization : `Bearer ${this.apiKey}`,
-                    // 'x-api-key': this.apiKey, 
-            }})
-            .then(res => res.json())
-            .then(res => res.languages)
-            .catch(err => {console.log('something went wrong while fetching data')});
-        }
-        else
-            console.log('setup apiKey and tenantId using setUpApiKey and setUpTenantId functions');
+        this.languages = await fetch(`${REACT_APP_API_KEY}/tenant/${this.tenantId}/languages`, 
+        { 
+            headers: {
+                'Content-Type': 'application/json',
+                Accept: 'application/json',
+                Authorization : `Bearer ${this.apiKey}`,
+                // 'x-api-key': this.apiKey, 
+        }})
+        .then(res => res.json())
+        .then(res => res.languages)
+        .catch(err => {console.log('something went wrong while fetching data')});        
     };
 
     //get specified text
@@ -70,40 +66,35 @@ export default class Translatify{
         if(!this.language || this.language === ''){
             throw 'no language selected';
         }
-        if(this.apiKey !== null && this.tenantId !== null)
-            return fetch(`${REACT_APP_API_KEY}/text/${this.tenantId}/${this.language}/${categoryName}/${title}`, 
-            { 
-                headers: {
-                    'Content-Type': 'application/json',
-                    Accept: 'application/json',
-                    Authorization : `Bearer ${this.apiKey}`
-            }})
-            .then(res => res.json())
-            .then(res => {
-                if(res.Text) return res.Text.text; 
-                else return '';
-            })
-            .catch(err => {throw err});
-        else
-            console.log('setup apiKey and tenantId using setUpApiKey and setUpTenantId functions');
+        return fetch(`${REACT_APP_API_KEY}/text/${this.tenantId}/${this.language}/${categoryName}/${title}`, 
+        { 
+            headers: {
+                'Content-Type': 'application/json',
+                Accept: 'application/json',
+                Authorization : `Bearer ${this.apiKey}`
+        }})
+        .then(res => res.json())
+        .then(res => {
+            if(res.Text) return res.Text.text; 
+            else return '';
+        })
+        .catch(err => {throw err});        
     };
 
     //sets object language and get all texts that match the 
     //category-title combination from all the components in the page
     handleLanguageChange(newLanguage){
-        this.language = newLanguage;
-        if(this.apiKey !== null && this.tenantId !== null){
-            if(!this.textHolders || this.textHolders.length === 0)
-                this.textHolders = findElementsMatchingIdPattern();
-            this.textHolders.forEach((item) => {
-                this.getText(item.category, item.title)
-                .then((text) =>{
-                    addTextToElement(item.element, text);
-                })
-                .catch(err =>{
-                    console.log(err);
-                })
-            });
-        }
+        this.language = newLanguage;        
+        if(!this.textHolders || this.textHolders.length === 0)
+            this.textHolders = findElementsMatchingIdPattern();
+        this.textHolders.forEach((item) => {
+            this.getText(item.category, item.title)
+            .then((text) =>{
+                addTextToElement(item.element, text);
+            })
+            .catch(err =>{
+                console.log(err);
+            })
+        });        
     };
 }
