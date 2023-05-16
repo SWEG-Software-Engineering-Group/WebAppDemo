@@ -28,7 +28,7 @@ function findElementsMatchingIdPattern() {
 }
 
 // Add some text to an HTML element
-function addTextToMatchingElement(element, text) {
+function addTextToElement(element, text) {
     element.textContent = text;
 }
 
@@ -98,7 +98,7 @@ export default class Translatify{
             this.textHolders.forEach((item) => {
                 this.getText(item.category, item.title)
                 .then((text) =>{
-                    addTextToMatchingElement(item.element, text);
+                    addTextToElement(item.element, text);
                 })
                 .catch(err =>{
                     console.log(err);
