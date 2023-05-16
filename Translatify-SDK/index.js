@@ -1,7 +1,7 @@
 const REACT_APP_API_KEY = 'https://iibte10n05.execute-api.eu-west-2.amazonaws.com/dev';
 
 //returns an array of elements that contain an id in the form of "category:XXX&title:XXX"
-function findElementsWithIdPattern() {
+function findElementsMatchingIdPattern() {
     // Define the regular expression pattern to match
     const idPattern = /category:(.*?)&title:(.*)/;
   
@@ -27,16 +27,18 @@ function findElementsWithIdPattern() {
     return matchingElements;
 }
 
-// Add some text to each matching element
+// Add some text to an HTML element
 function addTextToMatchingElement(element, text) {
     element.textContent = text;
 }
 
-function storeTextHolders(){
-    return findElementsWithIdPattern();
-}
+export default class Translatify{
+    tenantId;
+    apiKey;
+    language;
+    languages;
+    textHolders;
 
-class Translatify{
     constructor(tenantId, apiKey){
         this.tenantId = tenantId;
         this.apiKey = apiKey;
@@ -86,12 +88,13 @@ class Translatify{
             console.log('setup apiKey and tenantId using setUpApiKey and setUpTenantId functions');
     };
 
-    //sets object language and fires getText calls for every text in the new language that matches the category-title combination from all the components in the page
+    //sets object language and get all texts that match the 
+    //category-title combination from all the components in the page
     handleLanguageChange(newLanguage){
         this.language = newLanguage;
         if(this.apiKey !== null && this.tenantId !== null){
             if(!this.textHolders || this.textHolders.length === 0)
-                this.textHolders = storeTextHolders();
+                this.textHolders = findElementsMatchingIdPattern();
             this.textHolders.forEach((item) => {
                 this.getText(item.category, item.title)
                 .then((text) =>{
@@ -104,5 +107,3 @@ class Translatify{
         }
     };
 }
-
-export default Translatify;
