@@ -51,8 +51,7 @@ export default class Translatify{
             headers: {
                 'Content-Type': 'application/json',
                 Accept: 'application/json',
-                Authorization : `Bearer ${this.apiKey}`,
-                // 'x-api-key': this.apiKey, 
+                'x-api-key': this.apiKey, 
         }})
         .then(res => res.json())
         .then(res => res.languages)
@@ -71,7 +70,7 @@ export default class Translatify{
             headers: {
                 'Content-Type': 'application/json',
                 Accept: 'application/json',
-                Authorization : `Bearer ${this.apiKey}`
+                'x-api-key': this.apiKey, 
         }})
         .then(res => res.json())
         .then(res => {
